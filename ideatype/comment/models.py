@@ -1,8 +1,9 @@
+from django.contrib.auth.models import User
 from django.db import models
 
 from blog.models import Post
 
-# Create your models here.
+
 class Comment(models.Model):
     STATUS_NORMAL = 1
     STATUS_DELETE = 0
@@ -11,6 +12,7 @@ class Comment(models.Model):
         (STATUS_DELETE, '删除'),
     )
     target = models.ForeignKey(Post, verbose_name="评论目标")
+    owner = models.ForeignKey(User, verbose_name="作者")
     content = models.CharField(max_length=2000, verbose_name="内容")
     nickname = models.CharField(max_length=50, verbose_name="昵称")
     website = models.URLField(verbose_name="网站")
