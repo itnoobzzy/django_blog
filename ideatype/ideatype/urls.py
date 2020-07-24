@@ -15,10 +15,13 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
-# 在lib/site-packages下创建.pth文件加入custom_site模块路径
+
+# windows在lib/site-packages下创建.pth文件加入custom_site模块路径
 from custom_site import custom_site
+# linux 用下边的方式
+# from ideatype.custom_site import  custom_site
 
 urlpatterns = [
-    url(r'super_admin/', admin.site.urls),
-    url(r'^admin/', custom_site.urls),
+    url(r'^admin/', admin.site.urls),
+    url(r'^blog_admin/', custom_site.urls),
 ]

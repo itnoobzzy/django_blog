@@ -11,9 +11,9 @@ from django.contrib.admin import AdminSite
 
 
 class CustomSite(AdminSite):
-    """自定义后台站点管理之blog管理"""
+    """自定义用户后台站点管理"""
     site_header = 'my_blog'
-    site_title = '个人博客管理后台'
+    site_title = '博客管理后台'
     index_title = '首页'
 
 
