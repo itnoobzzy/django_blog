@@ -13,6 +13,8 @@ class PostAdminForm(forms.ModelForm):
     desc = forms.CharField(widget=forms.Textarea, label='摘要', required=False)
 
 
+class CommentAdminForm(forms.ModelForm):
+    content = forms.CharField(widget=forms.Textarea, label='内容', required=True)
 
 
 if __name__ == '__main__':
