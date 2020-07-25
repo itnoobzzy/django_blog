@@ -22,14 +22,13 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'vg8zmc7kdy3#i)fj+%-9c7n1+jyh-wu*z)8ix$x2c#y)uuee%%'
 
-
-
 ALLOWED_HOSTS = []
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'ideatype',
     'blog',
     'config',
     'comment',
@@ -98,7 +97,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'zh-hans'
 
-TIME_ZONE = 'Asia-Shanghai'
+TIME_ZONE = 'Asia/Shanghai'
 
 USE_I18N = True
 
