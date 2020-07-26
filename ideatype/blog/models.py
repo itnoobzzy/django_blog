@@ -89,6 +89,7 @@ class Post(models.Model):
 
     @staticmethod
     def get_by_tag(tag_id):
+        """通过标签获取文章"""
         try:
             tag = Tag.objects.get(id=tag_id)
         except Tag.DoesNotExist:
@@ -102,6 +103,7 @@ class Post(models.Model):
 
     @staticmethod
     def get_by_category(category_id):
+        """通过分类获取文章"""
         try:
             category = Category.objects.get(id=category_id)
         except Category.DoesNotExist:
@@ -115,7 +117,7 @@ class Post(models.Model):
 
     @classmethod
     def latest_posts(cls):
-        """"""
+        '''返回最新的文章'''
         return cls.objects.filter(status=cls.STATUS_NORMAL)
 
     @classmethod
