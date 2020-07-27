@@ -21,25 +21,6 @@ from base_admin import BaseOwnerAdmin
 # from ideatype.base_admin import BaseOwnerAdmin
 
 
-class TargetOwnerFilter(admin.SimpleListFilter):
-    """
-    自定义过滤器只显示当前用户的文章
-    """
-    title = "当前用户所属文章"
-    parameter_name = "owner_comment"
-
-    def lookups(self, request, model_admin):
-        if request.user.is_superuser:
-            return Post.objects.filter().values_list('id', 'title')
-        return Post.objects.filter(owner=request.user).values_list('id', 'title')
-
-    def queryset(self, request, queryset):
-        target_id = self.value()
-        if target_id:
-            return queryset.filter(target_id=self.value())
-        return queryset
-
-
 @admin.register(Comment)
 @admin.register(Comment, site=custom_site)
 class CommentAdmin(BaseOwnerAdmin):
@@ -47,8 +28,6 @@ class CommentAdmin(BaseOwnerAdmin):
     list_display = ['target', 'nickname', 'content', 'website',
                     'created_time', 'operator']
     list_display_links = ['target', 'website']
-
-    list_filter = [TargetOwnerFilter]
 
     search_fields = ['target', 'content']
 

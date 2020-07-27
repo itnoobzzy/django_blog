@@ -2,8 +2,10 @@ from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django.views.generic import DetailView, ListView
 
-from config.models import SideBar
+from config.models import SideBar, Link
 from .models import Post, Category, Tag
+from comment.forms import CommentForm
+from comment.models import Comment
 
 '''
 未使用类视图函数的写法
@@ -57,7 +59,7 @@ class CommentViewMixin:
         """将导航栏列表和侧边栏列表的数据加入模板上下文"""
         context = super(CommentViewMixin, self).get_context_data(**kwargs)
         context.update({
-            'sidebars': self.get_sidebars()
+            'sidebars': self.get_sidebars(),
         })
         context.update(self.get_navs())
         return context
@@ -66,9 +68,10 @@ class CommentViewMixin:
         """得到侧边栏数据"""
         return SideBar.objects.filter(status=SideBar.STATUS_SHOW)
 
+
     def get_navs(self):
         """得到导航栏数据"""
-        categories = Category.objcts.filter(status=Category.STATUS_NORMAL)
+        categories = Category.objects.filter(status=Category.STATUS_NORMAL)
         nav_categories = []
         normal_categories = []
         for cate in categories:
@@ -82,6 +85,8 @@ class CommentViewMixin:
             'navs': nav_categories,
             'categories': normal_categories
         }
+
+
 
 class IndexView(CommentViewMixin, ListView):
     """
@@ -125,7 +130,7 @@ class TagView(IndexView):
         tag_id = self.kwargs.get('tag_id')
         tag = get_object_or_404(Tag, pk=tag_id)
         context.update({
-            'tag': tag
+            'tags': tag
         })
         return context
 
@@ -133,25 +138,24 @@ class TagView(IndexView):
         """重写queryset, 根据标签过滤"""
         queryset = super(TagView, self).get_queryset()
         tag_id = self.kwargs.get('tag_id')
+        print("tag_id", tag_id)
         return queryset.filter(tag_id=tag_id)
 
 
 class PostDetailView(CommentViewMixin, DetailView):
     """文章详情类视图函数"""
-    queryset = Post.objects.filter(status=Post.STATUS_NORMAL)
+    queryset = Post.latest_posts()
     template_name = 'blog/detail.html'
     context_object_name = 'post'
     pk_url_kwarg = 'post_id'
 
-    def get(self, request, *args, **kwargs):
-        """接收详情页get请求"""
-        response = super(PostDetailView, self).get(request, *args, **kwargs)
-        self.handle_visited()
-        return response
-
-    def handle_visited(self):
-        """详情页get请求处理函数"""
-        pass
+    def get_context_data(self, **kwargs):
+        context = super(PostDetailView, self).get_context_data(**kwargs)
+        context.update({
+            'comment_form': CommentForm,
+            'comment_list': Comment.get_by_target(self.request.path)
+        })
+        return context
 
 
 class SearchView(IndexView):
@@ -178,3 +182,9 @@ class AuthorView(IndexView):
         author_id = self.kwargs.get('owner_id')
         return queryset.filter(owner_id=author_id)
 
+
+class LinkListView(CommentViewMixin, ListView):
+    """友链类视图函数"""
+    queryset = Link.objects.filter(status=Link.STATUS_NORMAL)
+    template_name = 'config/links.html'
+    context_object_name = 'link_list'

@@ -22,17 +22,22 @@ from custom_site import custom_site
 # from ideatype.custom_site import  custom_site
 from blog.views import (
     IndexView, CategoryView, TagView,
-    PostDetailView, AuthorView
+    PostDetailView, AuthorView, SearchView,
+    LinkListView
 )
+from comment.views import CommentView
 from config.views import LinkView
 
 urlpatterns = [
     url(r'^$', IndexView.as_view(), name='index'),
     url(r'^category/(?P<category_id>\d+)/$', CategoryView.as_view(), name='category-list'),
+    url(r'^search/$', SearchView.as_view(), name='search'),
     url(r'^tag/(?P<tag_id>\d+)/$', TagView.as_view(), name='post-list'),
     url(r'^post/(?P<post_id>\d+).html$', PostDetailView.as_view(), name='post-detail'),
     url(r'^links/$', LinkView.as_view(), name='links'),
     url(r'^author/(?P<owner_id>\d+)/$', AuthorView.as_view(), name='author'),
     url(r'^admin/', admin.site.urls, name='super-admin'),
     url(r'^blog_admin/', custom_site.urls, name='admin'),
+    url(r'^links/$', LinkListView.as_view(), name='links'),
+    url(r'^comment/$', CommentView.as_view(), name='comment')
 ]
