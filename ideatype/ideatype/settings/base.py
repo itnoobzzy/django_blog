@@ -54,11 +54,11 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'ideatype.urls'
 
 # THEME = 'default'
-# THEME = 'bootstrap'
+THEME = 'bootstrap'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'themes', "bootstrap", 'templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'themes', THEME, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
