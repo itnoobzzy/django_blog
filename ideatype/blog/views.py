@@ -1,4 +1,5 @@
-from django.shortcuts import render, get_object_or_404
+from django.db.models import Q
+from django.shortcuts import get_object_or_404
 from django.views.generic import DetailView, ListView
 
 from config.models import SideBar
@@ -56,18 +57,40 @@ class CommentViewMixin:
         """将导航栏列表和侧边栏列表的数据加入模板上下文"""
         context = super(CommentViewMixin, self).get_context_data(**kwargs)
         context.update({
-            'sidebars': SideBar.get_all()
+            'sidebars': self.get_sidebars()
         })
-        context.update(Category.get_navs())
+        context.update(self.get_navs())
         return context
 
+    def get_sidebars(self):
+        """得到侧边栏数据"""
+        return SideBar.objects.filter(status=SideBar.STATUS_SHOW)
+
+    def get_navs(self):
+        """得到导航栏数据"""
+        categories = Category.objcts.filter(status=Category.STATUS_NORMAL)
+        nav_categories = []
+        normal_categories = []
+        for cate in categories:
+            if cate in categories:
+                if cate.is_nav:
+                    nav_categories.append(cate)
+                else:
+                    normal_categories.append(cate)
+
+        return {
+            'navs': nav_categories,
+            'categories': normal_categories
+        }
 
 class IndexView(CommentViewMixin, ListView):
     """
     首页类视图函数，设定首页的基础数据集为最新的文章，
     每页显示5个，模板上下文名称模板名称
     """
-    queryset = Post.latest_posts()
+    queryset = Post.objects.filter(status=Post.STATUS_NORMAL)\
+        .select_related('owner')\
+        .select_related('category')
     paginate_by = 5
     context_object_name = 'post_list'
     template_name = 'blog/list.html'
@@ -115,9 +138,43 @@ class TagView(IndexView):
 
 class PostDetailView(CommentViewMixin, DetailView):
     """文章详情类视图函数"""
-    queryset = Post.latest_posts()
+    queryset = Post.objects.filter(status=Post.STATUS_NORMAL)
     template_name = 'blog/detail.html'
     context_object_name = 'post'
     pk_url_kwarg = 'post_id'
 
+    def get(self, request, *args, **kwargs):
+        """接收详情页get请求"""
+        response = super(PostDetailView, self).get(request, *args, **kwargs)
+        self.handle_visited()
+        return response
+
+    def handle_visited(self):
+        """详情页get请求处理函数"""
+        pass
+
+
+class SearchView(IndexView):
+    """搜索框类视图函数"""
+    def get_context_data(self, **kwargs):
+        context = super(SearchView, self).get_context_data()
+        context.update({
+            'keyword': self.request.GET.get('keyword', '')
+        })
+        return context
+
+    def get_queryset(self):
+        queryset = super(SearchView, self).get_queryset()
+        keyword = self.request.GET.get('keyword')
+        if not keyword:
+            return queryset
+        return queryset.filter(Q(title_icontains=keyword) | Q(desc_icontains=keyword))
+
+
+class AuthorView(IndexView):
+    """作者信息类视图函数"""
+    def get_queryset(self):
+        queryset = super(AuthorView, self).get_queryset()
+        author_id = self.kwargs.get('owner_id')
+        return queryset.filter(owner_id=author_id)
 
