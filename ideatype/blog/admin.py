@@ -147,7 +147,7 @@ class PostAdmin(BaseOwnerAdmin):
     operator.short_description = '操作'
 
 
-@admin.register(LogEntry, site=custom_site)
+@admin.register(LogEntry)
 class LogEntryAdmin(admin.ModelAdmin):
     """自定义日志记录管理"""
     list_display = ['object_repr', 'object_id', 'action_flag', 'user',

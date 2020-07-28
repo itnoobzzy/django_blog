@@ -18,8 +18,10 @@ from django.contrib import admin
 
 # windows在lib/site-packages下创建.pth文件加入custom_site模块路径
 from custom_site import custom_site
+from .autocomplete import CategoryAutocomplete, TagAutocomplete
 # linux 用下边的方式
 # from ideatype.custom_site import  custom_site
+
 from blog.views import (
     IndexView, CategoryView, TagView,
     PostDetailView, AuthorView, SearchView,
@@ -27,6 +29,7 @@ from blog.views import (
 )
 from comment.views import CommentView
 from config.views import LinkView
+
 
 urlpatterns = [
     url(r'^$', IndexView.as_view(), name='index'),
@@ -39,5 +42,8 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls, name='super-admin'),
     url(r'^blog_admin/', custom_site.urls, name='admin'),
     url(r'^links/$', LinkListView.as_view(), name='links'),
-    url(r'^comment/$', CommentView.as_view(), name='comment')
+    url(r'^comment/$', CommentView.as_view(), name='comment'),
+
+    url(r'^category-autocomplete/$', CategoryAutocomplete.as_view(), name='category-autocomplete'),
+    url(r'^tag-autocomplete/$', TagAutocomplete.as_view(), name='tag-autocomplete')
 ]
