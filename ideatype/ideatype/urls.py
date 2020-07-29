@@ -16,10 +16,13 @@ Including another URLconf
 import xadmin
 
 from django.conf.urls import url
-from django.contrib import admin
+from django.contrib.sitemaps import views as sitemap_views
 
 # windows在lib/site-packages下创建.pth文件加入custom_site模块路径
 from custom_site import custom_site
+
+from blog.rss import LatestPostFeed
+from blog.sitemap import PostSitemap
 from .autocomplete import CategoryAutocomplete, TagAutocomplete
 # linux 用下边的方式
 # from ideatype.custom_site import  custom_site
@@ -37,7 +40,7 @@ urlpatterns = [
     url(r'^$', IndexView.as_view(), name='index'),
     url(r'^category/(?P<category_id>\d+)/$', CategoryView.as_view(), name='category-list'),
     url(r'^search/$', SearchView.as_view(), name='search'),
-    url(r'^tag/(?P<tag_id>\d+)/$', TagView.as_view(), name='post-list'),
+    url(r'^tag/(?P<tag_id>\d+)/$', TagView.as_view(), name='tag-list'),
     url(r'^post/(?P<post_id>\d+).html$', PostDetailView.as_view(), name='post-detail'),
     url(r'^links/$', LinkView.as_view(), name='links'),
     url(r'^author/(?P<owner_id>\d+)/$', AuthorView.as_view(), name='author'),
@@ -46,5 +49,8 @@ urlpatterns = [
     url(r'^comment/$', CommentView.as_view(), name='comment'),
 
     url(r'^category-autocomplete/$', CategoryAutocomplete.as_view(), name='category-autocomplete'),
-    url(r'^tag-autocomplete/$', TagAutocomplete.as_view(), name='tag-autocomplete')
+    url(r'^tag-autocomplete/$', TagAutocomplete.as_view(), name='tag-autocomplete'),
+
+    url(r'^rss|feed/', LatestPostFeed(), name='rss'),
+    url(r'^sitemap\.xml$', sitemap_views.sitemap, {'sitemaps': {'posts': PostSitemap}})
 ]

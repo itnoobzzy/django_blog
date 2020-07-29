@@ -3,6 +3,7 @@ import mistune
 
 from django.contrib.auth.models import User
 from django.db import models
+from django.utils.functional import cached_property
 
 
 class Category(models.Model):
@@ -59,6 +60,7 @@ class Tag(models.Model):
 
     class Meta:
         verbose_name = verbose_name_plural = "标签"
+        ordering = ['-id']
 
     def __str__(self):
         return self.name
@@ -130,7 +132,7 @@ class Post(models.Model):
 
     @classmethod
     def latest_posts(cls):
-        '''返回最新的文章'''
+        """返回最新的文章"""
         return cls.objects.filter(status=cls.STATUS_NORMAL)
 
     @classmethod
@@ -138,4 +140,6 @@ class Post(models.Model):
         """返回降序排序的热门文章"""
         return cls.objects.filter(status=cls.STATUS_NORMAL).order_by('-pv')
 
-
+    @cached_property
+    def tags(self):
+        return ','.join(self.tag.values_list('name', flat=True))

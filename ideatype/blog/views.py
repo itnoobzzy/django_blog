@@ -71,7 +71,6 @@ class CommentViewMixin:
         """得到侧边栏数据"""
         return SideBar.objects.filter(status=SideBar.STATUS_SHOW)
 
-
     def get_navs(self):
         """得到导航栏数据"""
         categories = Category.objects.filter(status=Category.STATUS_NORMAL)
@@ -128,7 +127,7 @@ class TagView(IndexView):
     """标签列表类视图函数"""
     def get_context_data(self, **kwargs):
         """标签加入上下文"""
-        context = super(TagView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         tag_id = self.kwargs.get('tag_id')
         tag = get_object_or_404(Tag, pk=tag_id)
         context.update({
@@ -138,10 +137,9 @@ class TagView(IndexView):
 
     def get_queryset(self):
         """重写queryset, 根据标签过滤"""
-        queryset = super(TagView, self).get_queryset()
+        queryset = super().get_queryset()
         tag_id = self.kwargs.get('tag_id')
-        print("tag_id", tag_id)
-        return queryset.filter(tag_id=tag_id)
+        return queryset.filter(tag__id=tag_id)
 
 
 class PostDetailView(CommentViewMixin, DetailView):
