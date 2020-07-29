@@ -4,8 +4,8 @@
 # @Author : zhouzy_a
 # @Version：V 0.1
 # @File : forms.py
-# @desc :用来放置form嘻嘻那个管的代码
-
+# @desc :评论form验证
+import mistune
 
 from django import forms
 
@@ -46,8 +46,7 @@ class CommentForm(forms.ModelForm):
     def clean_content(self):
         """处理对应字段数据"""
         content = self.cleaned_data.get('content')
-        if len(content) < 10:
-            raise forms.ValidationError('内容长度怎么这么短！')
+        content = mistune.markdown(content)
         return content
 
     class Meta:

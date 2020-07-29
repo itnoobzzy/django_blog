@@ -7,9 +7,6 @@
     <title>{% block title %}首页{% endblock %}- typeidea博客系统</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
-
-    {% block extra_head %}
-    {% endblock %}
     <style>
     .post {
         margin-bottom: 5px;
@@ -77,5 +74,7 @@
         </div>
         {% endblock %}
     </footer>
+    {% block extra_block %}
+    {% endblock %}
   </body>
 </html>

@@ -14,7 +14,6 @@ from custom_site import custom_site
 from base_admin import BaseOwnerAdmin
 
 
-
 class PostInline:
     form_layout = (
         Container(
@@ -77,13 +76,14 @@ class PostAdmin(BaseOwnerAdmin):
     # 编辑页面
     save_on_top = True
 
-    exclude = ['owner']
+    # exclude = ['owner']
     form_layout = (
         Fieldset(
             '基础信息',
             Row("title", "category"),
             'status',
             'tag',
+            'owner'
         ),
         Fieldset(
             '内容信息',
