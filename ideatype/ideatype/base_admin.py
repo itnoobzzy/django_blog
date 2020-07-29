@@ -17,15 +17,14 @@ class BaseOwnerAdmin(object):
     """
     exclude = ('owner', )
 
-    def get_queryset(self, request):
-        qs = super(BaseOwnerAdmin, self).get_queryset(request)
-        if request.user.is_superuser:
-            return qs
+    def get_list_queryset(self):
+        request = self.request
+        qs = super().get_list_queryset()
         return qs.filter(owner=request.user)
 
-    def save_model(self, request, obj, form, change):
-        obj.owner = request.user
-        return super(BaseOwnerAdmin, self).save_model(request, obj, form, change)
+    def save_models(self):
+        self.new_obj.owner = self.request.user
+        return super().save_models()
 
 if __name__ == '__main__':
     pass
