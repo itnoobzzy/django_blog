@@ -99,7 +99,10 @@ class Post(models.Model):
 
     def save(self, *args, **kwargs):
         """将text格式转换为markdown格式"""
-        self.content_html = mistune.markdown(self.content)
+        if self.is_md:
+            self.content_html = mistune.markdown(self.content)
+        else:
+            self.content_html = self.content
         super(Post, self).save(*args, **kwargs)
 
     @staticmethod

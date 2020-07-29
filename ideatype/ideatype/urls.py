@@ -15,17 +15,14 @@ Including another URLconf
 """
 import xadmin
 
-from django.conf.urls import url
+from django.conf.urls import url, include
+from django.conf.urls.static import static
 from django.contrib.sitemaps import views as sitemap_views
-
-# windows在lib/site-packages下创建.pth文件加入custom_site模块路径
-from custom_site import custom_site
+from django.conf import settings
 
 from blog.rss import LatestPostFeed
 from blog.sitemap import PostSitemap
 from .autocomplete import CategoryAutocomplete, TagAutocomplete
-# linux 用下边的方式
-# from ideatype.custom_site import  custom_site
 
 from blog.views import (
     IndexView, CategoryView, TagView,
@@ -52,5 +49,7 @@ urlpatterns = [
     url(r'^tag-autocomplete/$', TagAutocomplete.as_view(), name='tag-autocomplete'),
 
     url(r'^rss|feed/', LatestPostFeed(), name='rss'),
-    url(r'^sitemap\.xml$', sitemap_views.sitemap, {'sitemaps': {'posts': PostSitemap}})
-]
+    url(r'^sitemap\.xml$', sitemap_views.sitemap, {'sitemaps': {'posts': PostSitemap}}),
+
+    url(r'^ckeditor/', include('ckeditor_uploader.urls')),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
