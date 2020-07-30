@@ -14,12 +14,15 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 import xadmin
+from rest_framework.documentation import include_docs_urls
+from rest_framework.routers import DefaultRouter
 
 from django.conf.urls import url, include
 from django.conf.urls.static import static
 from django.contrib.sitemaps import views as sitemap_views
 from django.conf import settings
 
+from blog.apis import PostViewSet, CategoryViewSet
 from blog.rss import LatestPostFeed
 from blog.sitemap import PostSitemap
 from .autocomplete import CategoryAutocomplete, TagAutocomplete
@@ -32,6 +35,9 @@ from blog.views import (
 from comment.views import CommentView
 from config.views import LinkView
 
+router = DefaultRouter()
+router.register(r'post', PostViewSet, basename='api-post')
+router.register(r'category', CategoryViewSet, basename='api-category')
 
 urlpatterns = [
     url(r'^$', IndexView.as_view(), name='index'),
@@ -52,4 +58,9 @@ urlpatterns = [
     url(r'^sitemap\.xml$', sitemap_views.sitemap, {'sitemaps': {'posts': PostSitemap}}),
 
     url(r'^ckeditor/', include('ckeditor_uploader.urls')),
+
+    url('^api/', include(router.urls, namespace="api")),
+    url('^api/docs/', include_docs_urls(title='ideatype apis')),
+
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

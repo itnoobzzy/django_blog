@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'dal_select2',
     'ckeditor',
     'ckeditor_uploader',
+    'rest_framework',
 
     'crispy_forms',
     'django.contrib.admin',
@@ -143,3 +144,9 @@ CKEDITOR_UPLOAD_PATH = 'article_images'
 
 DEFAULT_FILE_STORAGE = 'ideatype.storage.WatermarkStorage'
 
+# rest_framework
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
+    'PAGE_SIZE': 2,
+}
