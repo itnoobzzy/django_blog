@@ -14,6 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 import xadmin
+from django.views.decorators.cache import cache_page
 from rest_framework.documentation import include_docs_urls
 from rest_framework.routers import DefaultRouter
 
@@ -55,7 +56,8 @@ urlpatterns = [
     url(r'^tag-autocomplete/$', TagAutocomplete.as_view(), name='tag-autocomplete'),
 
     url(r'^rss|feed/', LatestPostFeed(), name='rss'),
-    url(r'^sitemap\.xml$', sitemap_views.sitemap, {'sitemaps': {'posts': PostSitemap}}),
+    url(r'^sitemap\.xml$', cache_page(60 * 20, key_prefix='sitemap_cache_')
+    (sitemap_views.sitemap), {'sitemaps': {'posts': PostSitemap}}),
 
     url(r'^ckeditor/', include('ckeditor_uploader.urls')),
 

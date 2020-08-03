@@ -25,3 +25,18 @@ DATABASES = {
         'OPTIONS': {'charset': 'utf8mb4'}
     }
 }
+
+REDIS_URL = '192.168.232.128:6739:1'
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': REDIS_URL,
+        'TIME': 300,
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+            'PARSER_CLASS': 'redis.connection.HiredisParser',
+        },
+        'CONNECTION_POOL_CLASS': 'redis.connection.BlockingConnectionPool',
+    }
+}
