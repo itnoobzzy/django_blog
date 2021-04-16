@@ -9,7 +9,7 @@ Django==1.11.29
 django-autocomplete-light==3.2.10
 django-ckeditor==5.4.0
 django-crispy-forms==1.9.2
-django-debug-toolbar==1.9.1
+django-debug-toolbar==1.11.1
 django-formtools==2.2
 django-import-export==2.3.0
 django-js-asset==1.2.2
